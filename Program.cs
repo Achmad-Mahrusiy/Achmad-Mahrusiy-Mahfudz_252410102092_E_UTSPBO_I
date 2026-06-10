@@ -1,71 +1,135 @@
-﻿using System;
-using System.Threading.Channels;
+using System;
 
 abstract class TiketWisata
 {
-    public string namaPengunjung {  get; set; }
-    public int idTiket {  get; set; }
-    public string wahanaUtama { get; set; }
+    private string namaPengunjung;
+    private string idTiket;
+    private string wahanaUtama;
 
+    public string NamaPengunjung
+    {
+        get { return namaPengunjung; }
+        set { namaPengunjung = value; }
+    }
 
+    public string IdTiket
+    {
+        get { return idTiket; }
+        set { idTiket = value; }
+    }
 
-    public virtual void tampilInfo(string namaPengunjung, int idTiket, string wahanaUtama)
+    public string WahanaUtama
+    {
+        get { return wahanaUtama; }
+        set { wahanaUtama = value; }
+    }
+
+    public TiketWisata(string namaPengunjung, string idTiket, string wahanaUtama)
+    {
+        this.namaPengunjung = namaPengunjung;
+        this.idTiket = idTiket;
+        this.wahanaUtama = wahanaUtama;
+    }
+
+    public virtual void tampilInfo()
     {
         Console.WriteLine($"Pengunjung : {namaPengunjung} | Tiket : {idTiket} | Wahana : {wahanaUtama}");
     }
 
-    public abstract int hitungTotalTiket
-    {
-        
-    }
+    public abstract int hitungTotalTiket();
+
 }
-
-
 
 class TiketWeekday : TiketWisata
 {
-    string namaPengunjung;
+    private int hargaMasuk;
+    private int jumlahTiket;
 
-    int hargaMasuk;
-    int jumlahTiket;
-
-    public override void tampilInfo(string namaPengunjung, int idTiket, string wahanaUtama)
+    public TiketWeekday(string namaPengunjung, string idTiket, string wahanaUtama, int hargaMasuk, int jumlahTiket)
         : base(namaPengunjung, idTiket, wahanaUtama)
     {
-        
-        Console.WriteLine("");
+        this.hargaMasuk = hargaMasuk;
+        this.jumlahTiket = jumlahTiket;
+    }
+
+    public override int hitungTotalTiket()
+    {
+        return hargaMasuk * jumlahTiket;
+    }
+
+    public override void tampilInfo()
+    {
+        base.tampilInfo();
+        Console.WriteLine($"Total Tiket : Rp {hitungTotalTiket()}");
+        Console.WriteLine();
     }
 
 }
 
 class TiketWeekend : TiketWisata
 {
-    int hargaMasuk;
-    int biayaTerusanWahana;
+    private int hargaMasuk;
+    private int jumlahTiket;
+    private int biayaTerusanWahana;
 
-    public override void tampilInfo(string namaPengunjung, int idTiket, string wahanaUtama)
-        :base
+    public TiketWeekend(string namaPengunjung, string idTiket, string wahanaUtama, int hargaMasuk, int jumlahTiket, int biayaTerusanWahana)
+        : base(namaPengunjung, idTiket, wahanaUtama)
+    {
+        this.hargaMasuk = hargaMasuk;
+        this.jumlahTiket = jumlahTiket;
+        this.biayaTerusanWahana = biayaTerusanWahana;
+    }
 
-    public override 
-    
+    public override int hitungTotalTiket()
+    {
+        return (hargaMasuk * jumlahTiket) + biayaTerusanWahana;
+    }
+
+    public override void tampilInfo()
+    {
+        base.tampilInfo();
+        Console.WriteLine($"Total Tiket : Rp {hitungTotalTiket()}");
+        Console.WriteLine();
+    }
 
 }
 
+class RiwayatKunjungan
+{
+    public string JenisTiket { get; set; }
+    public int JumlahTiket { get; set; }
+    public string TanggalKunjungan { get; set; }
+
+    public RiwayatKunjungan(string jenisTiket, int jumlahTiket, string tanggalKunjungan)
+    {
+        JenisTiket = jenisTiket;
+        JumlahTiket = jumlahTiket;
+        TanggalKunjungan = tanggalKunjungan;
+    }
+
+    public void tampilRiwayat(int no)
+    {
+        Console.WriteLine($"{no}. {JenisTiket} | {JumlahTiket} Tiket | {TanggalKunjungan}");
+    }
+
+}
 
 
 class Program
 {
-    static void Main()
+    static void Main(string[] Args)
     {
+        TiketWisata tiketWisata1 = new TiketWeekend("Feri", "TW001", "Roller Coaster", 4, 50000, 25000);
+        TiketWisata tiketwisata2 = new TiketWeekday("Fery", "TW001", "Roller Coaster", 4, 50000);
 
-        Console.WriteLine("========OOPPark========");
+        tiketWisata1.tampilInfo();
+        tiketwisata2.tampilInfo();
 
-        TiketWisata TiketWisata = new TiketWisata();
+        RiwayatKunjungan riwayat1 = new RiwayatKunjungan("Weekend", 4, "18-10-2025");
+        RiwayatKunjungan riwayat2 = new RiwayatKunjungan("Weekday", 4, "14-10-2025");
 
-
-        Console.WriteLine("=======================");
-        Console.ReadLine();
+        riwayat1.tampilRiwayat(1);
+        riwayat2.tampilRiwayat(2);
     }
+
 }
-
-
